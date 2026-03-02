@@ -3,6 +3,9 @@ import './App.css';
 import RegexInput from './components/RegexInput';
 import AutomatonGraph from './components/AutomatonGraph';
 import ComingSoonPanel from './components/ComingSoonPanel';
+import { Button } from './components/ui/Button';
+import { GlowCard } from './components/ui/GlowCard';
+import StarField from './components/ui/StarField';
 import { validateRegex } from './algorithms/regexValidator';
 import { regexToPostfix } from './algorithms/regexToPostfix';
 import { thompsonConstruction } from './algorithms/thompsonConstruction';
@@ -10,33 +13,37 @@ import { thompsonConstruction } from './algorithms/thompsonConstruction';
 function LandingPage({ onLaunch }) {
   return (
     <div className="landing-page">
+      <StarField />
       <div className="landing-hero">
-        <h1 className="landing-title">Formal Language Engine</h1>
+        <h1 className="landing-title">
+          Formal Language{' '}
+          <span className="landing-title-accent">Engine</span>
+        </h1>
         <p className="landing-tagline">
           Explore the foundations of computation — visualize regular expressions,
           automata, and language transformations in an interactive simulator.
         </p>
-        <button className="landing-cta" onClick={onLaunch}>
+        <Button size="lg" onClick={onLaunch}>
           Launch Simulator →
-        </button>
+        </Button>
       </div>
 
       <div className="landing-features">
-        <div className="feature-card">
+        <GlowCard>
           <div className="feature-icon">🔤</div>
           <h3>Regex to ε-NFA</h3>
           <p>Convert regular expressions to epsilon-NFA using Thompson&apos;s Construction algorithm.</p>
-        </div>
-        <div className="feature-card">
+        </GlowCard>
+        <GlowCard>
           <div className="feature-icon">⚙️</div>
           <h3>DFA Conversion</h3>
           <p>Transform ε-NFA into deterministic finite automata with subset construction.</p>
-        </div>
-        <div className="feature-card">
+        </GlowCard>
+        <GlowCard>
           <div className="feature-icon">✂️</div>
           <h3>DFA Minimization</h3>
           <p>Minimize DFA states using partition refinement for optimal automata.</p>
-        </div>
+        </GlowCard>
       </div>
     </div>
   );
@@ -68,11 +75,12 @@ function Simulator() {
 
   return (
     <div className="app-container">
+      <StarField />
       <header className="app-header">
         <div className="app-nav">
-          <button className="back-button" onClick={() => setShowLanding(true)}>
+          <Button variant="outline" size="sm" onClick={() => setShowLanding(true)}>
             ← Home
-          </button>
+          </Button>
         </div>
         <h1 className="app-title">Formal Language Engine</h1>
         <p className="app-subtitle">Theory of Computation — Phase 1: Regular Expression → ε-NFA</p>

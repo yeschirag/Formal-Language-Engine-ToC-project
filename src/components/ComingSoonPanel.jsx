@@ -2,8 +2,8 @@ export default function ComingSoonPanel({ title }) {
   return (
     <div
       style={{
-        border: '1px solid rgba(255, 255, 255, 0.5)',
-        borderRadius: '20px',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '16px',
         padding: '32px 24px',
         display: 'flex',
         flexDirection: 'column',
@@ -11,24 +11,21 @@ export default function ComingSoonPanel({ title }) {
         justifyContent: 'center',
         height: '100%',
         minHeight: '200px',
-        background: 'rgba(255, 255, 255, 0.35)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.12)',
+        background: 'rgba(255, 255, 255, 0.03)',
       }}
     >
-      <h3 style={{ margin: '0 0 8px 0', color: '#fff', fontSize: '16px', fontWeight: 600, textShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
+      <h3 style={{ margin: '0 0 8px 0', color: '#e4e4e7', fontSize: '15px', fontWeight: 600 }}>
         {title}
       </h3>
       <span style={{
         margin: 0,
-        color: 'rgba(255, 255, 255, 0.7)',
-        fontSize: '13px',
+        color: '#71717a',
+        fontSize: '12px',
         fontWeight: 500,
-        background: 'rgba(255, 255, 255, 0.25)',
+        background: 'rgba(255, 255, 255, 0.05)',
         padding: '4px 14px',
         borderRadius: '20px',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
       }}>
         Coming Soon
       </span>

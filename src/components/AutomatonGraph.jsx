@@ -34,16 +34,17 @@ function automatonToFlow(automaton) {
       data: { label },
       position: { x: col * SPACING_X + 50, y: row * SPACING_Y + 50 },
       style: {
-        border: isAccept ? '3px double #2563eb' : '2px solid #64748b',
+        border: isAccept ? '3px double #818cf8' : '2px solid #3f3f46',
         borderRadius: '50%',
         width: 60,
         height: 60,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isStart ? '#dbeafe' : isAccept ? '#fef3c7' : '#fff',
+        background: isStart ? '#1e1b4b' : isAccept ? '#312e81' : '#18181b',
         fontSize: '12px',
         fontWeight: isStart || isAccept ? 'bold' : 'normal',
+        color: '#e4e4e7',
       },
     };
   });
@@ -71,9 +72,10 @@ function automatonToFlow(automaton) {
       target: to,
       label: labels.join(', '),
       type: from === to ? 'default' : 'default',
-      markerEnd: { type: MarkerType.ArrowClosed },
-      style: { stroke: '#64748b' },
-      labelStyle: { fontSize: 12, fontWeight: 'bold' },
+      markerEnd: { type: MarkerType.ArrowClosed, color: '#6366f1' },
+      style: { stroke: '#6366f1' },
+      labelStyle: { fontSize: 12, fontWeight: 'bold', fill: '#a1a1aa' },
+      labelBgStyle: { fill: '#18181b', fillOpacity: 0.8 },
     });
   }
 
@@ -94,11 +96,11 @@ export default function AutomatonGraph({ automaton }) {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        color: '#64748b',
+        color: '#52525b',
         gap: '8px',
       }}>
         <span style={{ fontSize: '32px' }} role="img" aria-label="Search">🔍</span>
-        <span style={{ fontWeight: 500 }}>Enter a regex and click Generate to see the ε-NFA.</span>
+        <span style={{ fontWeight: 500, color: '#71717a' }}>Enter a regex and click Generate to see the ε-NFA.</span>
       </div>
     );
   }
@@ -111,7 +113,7 @@ export default function AutomatonGraph({ automaton }) {
         fitView
         attributionPosition="bottom-left"
       >
-        <Background color="#e2e8f0" gap={16} />
+        <Background color="#27272a" gap={16} />
         <Controls />
       </ReactFlow>
     </div>
