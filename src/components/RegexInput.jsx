@@ -10,7 +10,7 @@ export default function RegexInput({ onGenerate }) {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-      <label htmlFor="regex-input" style={{ fontWeight: 'bold', color: '#334155', whiteSpace: 'nowrap' }}>
+      <label htmlFor="regex-input" style={{ fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', textShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
         Regex (a, b):
       </label>
       <input
@@ -21,25 +21,36 @@ export default function RegexInput({ onGenerate }) {
         placeholder="e.g. (a|b)*ab"
         style={{
           flex: 1,
-          padding: '8px 12px',
+          padding: '10px 14px',
           fontSize: '16px',
-          border: '2px solid #cbd5e1',
-          borderRadius: '8px',
+          border: '1px solid rgba(255, 255, 255, 0.6)',
+          borderRadius: '12px',
           fontFamily: 'monospace',
           outline: 'none',
+          background: 'rgba(255, 255, 255, 0.45)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          boxShadow: '0 4px 16px rgba(31, 38, 135, 0.1)',
+          color: '#1e293b',
+          transition: 'all 0.25s ease',
         }}
       />
       <button
         type="submit"
         style={{
-          padding: '8px 24px',
+          padding: '10px 28px',
           fontSize: '16px',
-          fontWeight: 'bold',
-          background: '#2563eb',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
+          fontWeight: 600,
+          background: 'rgba(255, 255, 255, 0.55)',
+          color: '#4f46e5',
+          border: '1px solid rgba(255, 255, 255, 0.7)',
+          borderRadius: '12px',
           cursor: 'pointer',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          boxShadow: '0 4px 16px rgba(31, 38, 135, 0.1)',
+          transition: 'all 0.25s ease',
+          fontFamily: 'inherit',
         }}
       >
         Generate

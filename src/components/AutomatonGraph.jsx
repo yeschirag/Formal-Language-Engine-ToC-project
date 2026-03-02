@@ -88,8 +88,17 @@ export default function AutomatonGraph({ automaton }) {
 
   if (!automaton) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94a3b8' }}>
-        Enter a regex and click Generate to see the ε-NFA.
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        color: '#64748b',
+        gap: '8px',
+      }}>
+        <span style={{ fontSize: '32px' }}>🔍</span>
+        <span style={{ fontWeight: 500 }}>Enter a regex and click Generate to see the ε-NFA.</span>
       </div>
     );
   }
