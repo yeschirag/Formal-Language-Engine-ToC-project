@@ -73,7 +73,6 @@ function Simulator() {
           <button className="back-button" onClick={() => setShowLanding(true)}>
             ← Home
           </button>
-          <div />
         </div>
         <h1 className="app-title">Formal Language Engine</h1>
         <p className="app-subtitle">Theory of Computation — Phase 1: Regular Expression → ε-NFA</p>

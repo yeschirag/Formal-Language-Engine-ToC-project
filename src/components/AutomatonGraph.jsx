@@ -97,7 +97,7 @@ export default function AutomatonGraph({ automaton }) {
         color: '#64748b',
         gap: '8px',
       }}>
-        <span style={{ fontSize: '32px' }}>🔍</span>
+        <span style={{ fontSize: '32px' }} role="img" aria-label="Search">🔍</span>
         <span style={{ fontWeight: 500 }}>Enter a regex and click Generate to see the ε-NFA.</span>
       </div>
     );
