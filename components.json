@@ -4,9 +4,10 @@
   "rsc": false,
   "tsx": false,
   "tailwind": {
-    "config": "",
+
+    "config": "tailwind.config.js",
     "css": "src/index.css",
-    "baseColor": "neutral",
+    "baseColor": "slate",
     "cssVariables": true,
     "prefix": ""
   },
@@ -19,5 +20,8 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@react-bits": "https://reactbits.dev/r/{name}.json"
+  }
+
 }
