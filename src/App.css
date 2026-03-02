@@ -39,7 +39,7 @@
   padding: 14px 36px;
   font-size: 18px;
   font-weight: 600;
-  color: var(--accent-dark);
+  color: var(--brand-accent-dark);
   background: var(--glass-bg-strong);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
