@@ -6,6 +6,7 @@ import ComingSoonPanel from './components/ComingSoonPanel';
 import { Button } from './components/ui/Button';
 import { GlowCard } from './components/ui/GlowCard';
 import StarField from './components/ui/StarField';
+import { ThemeToggle } from './components/ui/ThemeToggle';
 import { validateRegex } from './algorithms/regexValidator';
 import { regexToPostfix } from './algorithms/regexToPostfix';
 import { thompsonConstruction } from './algorithms/thompsonConstruction';
@@ -14,6 +15,9 @@ function LandingPage({ onLaunch }) {
   return (
     <div className="landing-page">
       <StarField />
+      <div className="absolute top-4 right-6">
+        <ThemeToggle />
+      </div>
       <div className="landing-hero">
         <h1 className="landing-title">
           Formal Language{' '}
@@ -81,6 +85,7 @@ function Simulator() {
           <Button variant="outline" size="sm" onClick={() => setShowLanding(true)}>
             ← Home
           </Button>
+          <ThemeToggle />
         </div>
         <h1 className="app-title">Formal Language Engine</h1>
         <p className="app-subtitle">Theory of Computation — Phase 1: Regular Expression → ε-NFA</p>
