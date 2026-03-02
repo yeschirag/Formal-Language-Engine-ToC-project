@@ -2,8 +2,8 @@ export default function ComingSoonPanel({ title }) {
   return (
     <div
       style={{
-        border: '2px dashed #cbd5e1',
-        borderRadius: '12px',
+        border: '1px solid rgba(255, 255, 255, 0.5)',
+        borderRadius: '20px',
         padding: '32px 24px',
         display: 'flex',
         flexDirection: 'column',
@@ -11,15 +11,27 @@ export default function ComingSoonPanel({ title }) {
         justifyContent: 'center',
         height: '100%',
         minHeight: '200px',
-        background: '#f8fafc',
+        background: 'rgba(255, 255, 255, 0.35)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.12)',
       }}
     >
-      <h3 style={{ margin: '0 0 8px 0', color: '#475569', fontSize: '16px' }}>
+      <h3 style={{ margin: '0 0 8px 0', color: '#fff', fontSize: '16px', fontWeight: 600, textShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
         {title}
       </h3>
-      <p style={{ margin: 0, color: '#94a3b8', fontSize: '14px' }}>
+      <span style={{
+        margin: 0,
+        color: 'rgba(255, 255, 255, 0.7)',
+        fontSize: '13px',
+        fontWeight: 500,
+        background: 'rgba(255, 255, 255, 0.25)',
+        padding: '4px 14px',
+        borderRadius: '20px',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+      }}>
         Coming Soon
-      </p>
+      </span>
     </div>
   );
 }
