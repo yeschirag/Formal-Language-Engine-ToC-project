@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 /**
  * Animated star-field / particle background.
- * Inspired by react-bits Particles component.
+ * Inspired by react-bits (https://github.com/DavidHDev/react-bits) Particles component.
  * Renders a canvas with gently drifting luminous particles.
  */
 export default function StarField({ className }) {
