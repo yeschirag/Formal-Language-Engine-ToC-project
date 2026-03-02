@@ -4,7 +4,10 @@ import { cn } from '@/lib/utils';
 
 export function ThemeToggle({ className }) {
   const [isDark, setIsDark] = useState(() => {
-    return document.documentElement.classList.contains('dark');
+    if (typeof document !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return true;
   });
 
   useEffect(() => {

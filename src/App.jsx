@@ -15,7 +15,7 @@ function LandingPage({ onLaunch }) {
   return (
     <div className="landing-page">
       <StarField />
-      <div style={{ position: 'absolute', top: 16, right: 24 }}>
+      <div className="absolute top-4 right-6">
         <ThemeToggle />
       </div>
       <div className="landing-hero">
