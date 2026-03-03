@@ -22,7 +22,7 @@ export function ThemeToggle({ className }) {
     <button
       onClick={() => setIsDark(!isDark)}
       className={cn(
-        "inline-flex items-center justify-center rounded-xl p-2 transition-all duration-200 cursor-pointer border border-white/10 bg-white/5 text-white hover:bg-white/10 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
+        "inline-flex items-center justify-center rounded-lg p-2 transition-colors duration-150 cursor-pointer border border-border bg-card text-foreground hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
         className
       )}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

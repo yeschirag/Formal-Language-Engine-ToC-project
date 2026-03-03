@@ -9,8 +9,11 @@ export default function RegexInput({ onGenerate }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-      <label htmlFor="regex-input" style={{ fontWeight: 600, color: '#a1a1aa', whiteSpace: 'nowrap', fontSize: '14px' }}>
+    <form onSubmit={handleSubmit} className="flex items-center gap-3">
+      <label
+        htmlFor="regex-input"
+        className="text-sm font-medium text-muted-foreground whitespace-nowrap"
+      >
         Regex (a, b):
       </label>
       <input
@@ -19,34 +22,11 @@ export default function RegexInput({ onGenerate }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="e.g. (a|b)*ab"
-        style={{
-          flex: 1,
-          padding: '10px 14px',
-          fontSize: '15px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '12px',
-          fontFamily: 'monospace',
-          outline: 'none',
-          background: 'rgba(255, 255, 255, 0.05)',
-          color: '#fafafa',
-          transition: 'all 0.2s ease',
-        }}
+        className="flex-1 px-3.5 py-2.5 text-sm font-mono rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground outline-none transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
       />
       <button
         type="submit"
-        style={{
-          padding: '10px 24px',
-          fontSize: '14px',
-          fontWeight: 600,
-          background: '#6366f1',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '12px',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease',
-          fontFamily: 'inherit',
-          boxShadow: '0 0 20px -5px rgba(99, 102, 241, 0.4)',
-        }}
+        className="px-5 py-2.5 text-sm font-medium rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
       >
         Generate
       </button>

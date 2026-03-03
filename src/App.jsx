@@ -15,10 +15,13 @@ function LandingPage({ onLaunch }) {
   return (
     <div className="landing-page">
       <StarField />
-      <div className="absolute top-4 right-6">
+      <div className="absolute top-4 right-6 z-10">
         <ThemeToggle />
       </div>
-      <div className="landing-hero">
+      <div className="landing-hero animate-fade-in">
+        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400 mb-4">
+          Theory of Computation
+        </p>
         <h1 className="landing-title">
           Formal Language{' '}
           <span className="landing-title-accent">Engine</span>
@@ -33,20 +36,20 @@ function LandingPage({ onLaunch }) {
       </div>
 
       <div className="landing-features">
-        <GlowCard>
+        <GlowCard className="animate-fade-in-delay-1">
           <div className="feature-icon">🔤</div>
-          <h3>Regex to ε-NFA</h3>
-          <p>Convert regular expressions to epsilon-NFA using Thompson&apos;s Construction algorithm.</p>
+          <h3 className="text-sm font-semibold text-foreground mb-1">Regex to ε-NFA</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">Convert regular expressions to epsilon-NFA using Thompson&apos;s Construction algorithm.</p>
         </GlowCard>
-        <GlowCard>
+        <GlowCard className="animate-fade-in-delay-2">
           <div className="feature-icon">⚙️</div>
-          <h3>DFA Conversion</h3>
-          <p>Transform ε-NFA into deterministic finite automata with subset construction.</p>
+          <h3 className="text-sm font-semibold text-foreground mb-1">DFA Conversion</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">Transform ε-NFA into deterministic finite automata with subset construction.</p>
         </GlowCard>
-        <GlowCard>
+        <GlowCard className="animate-fade-in-delay-3">
           <div className="feature-icon">✂️</div>
-          <h3>DFA Minimization</h3>
-          <p>Minimize DFA states using partition refinement for optimal automata.</p>
+          <h3 className="text-sm font-semibold text-foreground mb-1">DFA Minimization</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">Minimize DFA states using partition refinement for optimal automata.</p>
         </GlowCard>
       </div>
     </div>
@@ -55,12 +58,14 @@ function LandingPage({ onLaunch }) {
 
 function Simulator() {
   const [automaton, setAutomaton] = useState(null);
+  const [currentRegex, setCurrentRegex] = useState('');
   const [error, setError] = useState('');
   const [showLanding, setShowLanding] = useState(true);
 
   const handleGenerate = (regex) => {
     setError('');
     setAutomaton(null);
+    setCurrentRegex('');
 
     const validation = validateRegex(regex);
     if (!validation.valid) {
@@ -71,6 +76,7 @@ function Simulator() {
     const postfix = regexToPostfix(regex);
     const nfa = thompsonConstruction(postfix);
     setAutomaton(nfa);
+    setCurrentRegex(regex);
   };
 
   if (showLanding) {
@@ -88,10 +94,16 @@ function Simulator() {
           <ThemeToggle />
         </div>
         <h1 className="app-title">Formal Language Engine</h1>
-        <p className="app-subtitle">Theory of Computation — Phase 1: Regular Expression → ε-NFA</p>
+        <p className="app-subtitle">Phase 1: Regular Expression → ε-NFA</p>
         <div className="input-section">
           <RegexInput onGenerate={handleGenerate} />
           {error && <p className="error-message">{error}</p>}
+          {currentRegex && (
+            <div className="regex-display">
+              <span className="regex-display-label">Input Regex:</span>
+              <span className="regex-display-value">{currentRegex}</span>
+            </div>
+          )}
         </div>
       </header>
 
