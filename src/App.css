@@ -157,8 +157,7 @@
   color: hsl(var(--foreground));
   background: hsl(var(--secondary));
   border-bottom: 1px solid hsl(var(--border));
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .panel-content {
