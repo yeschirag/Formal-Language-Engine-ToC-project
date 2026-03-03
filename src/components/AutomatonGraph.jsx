@@ -14,8 +14,8 @@ function automatonToFlow(automaton) {
   if (!automaton) return { nodes: [], edges: [] };
 
   const { states, transitions, startState, acceptStates } = automaton;
-  const SPACING_X = 160;
-  const SPACING_Y = 100;
+  const SPACING_X = 200;
+  const SPACING_Y = 140;
   const COLS = Math.max(3, Math.ceil(Math.sqrt(states.length)));
 
   const nodes = states.map((state, i) => {
@@ -34,17 +34,18 @@ function automatonToFlow(automaton) {
       data: { label },
       position: { x: col * SPACING_X + 50, y: row * SPACING_Y + 50 },
       style: {
-        border: isAccept ? '3px double #6366f1' : '2px solid hsl(215, 28%, 17%)',
+        border: isAccept ? '3px double #6366f1' : '2px solid #3b82f6',
         borderRadius: '50%',
-        width: 60,
-        height: 60,
+        width: 70,
+        height: 70,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isStart ? '#1e1b4b' : isAccept ? '#312e81' : 'hsl(224, 71%, 4%)',
-        fontSize: '12px',
-        fontWeight: isStart || isAccept ? 'bold' : 'normal',
-        color: '#e4e4e7',
+        background: isStart ? '#1e3a8a' : isAccept ? '#1e40af' : 'hsl(224, 71%, 8%)',
+        fontSize: '13px',
+        fontWeight: isStart || isAccept ? 'bold' : '600',
+        color: '#f1f5f9',
+        boxShadow: isStart || isAccept ? '0 0 20px rgba(99, 102, 241, 0.4)' : '0 2px 8px rgba(0, 0, 0, 0.3)',
       },
     };
   });
@@ -66,16 +67,32 @@ function automatonToFlow(automaton) {
   }
 
   for (const [key, { from, to, labels }] of edgeMap) {
+    const isSelfLoop = from === to;
     edges.push({
       id: key,
       source: from,
       target: to,
       label: labels.join(', '),
-      type: 'default',
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#6366f1' },
-      style: { stroke: '#6366f1' },
-      labelStyle: { fontSize: 12, fontWeight: 'bold', fill: '#94a3b8' },
-      labelBgStyle: { fill: 'hsl(224, 71%, 4%)', fillOpacity: 0.9 },
+      type: isSelfLoop ? 'default' : 'smoothstep',
+      markerEnd: { type: MarkerType.ArrowClosed, color: '#6366f1', width: 20, height: 20 },
+      style: {
+        stroke: '#6366f1',
+        strokeWidth: 2.5,
+      },
+      labelStyle: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        fill: '#e0e7ff',
+        fontFamily: 'monospace',
+      },
+      labelBgStyle: {
+        fill: 'hsl(224, 71%, 4%)',
+        fillOpacity: 0.95,
+        rx: 4,
+        ry: 4,
+      },
+      labelBgPadding: [8, 6],
+      animated: labels.includes('ε'),
     });
   }
 
@@ -103,10 +120,16 @@ export default function AutomatonGraph({ automaton }) {
         nodes={nodes}
         edges={edges}
         fitView
+        fitViewOptions={{ padding: 0.2, maxZoom: 1.2 }}
         attributionPosition="bottom-left"
+        minZoom={0.2}
+        maxZoom={2}
+        nodesDraggable={true}
+        nodesConnectable={false}
+        elementsSelectable={true}
       >
-        <Background color="#1e293b" gap={16} />
-        <Controls />
+        <Background color="#334155" gap={20} size={1} />
+        <Controls showInteractive={false} />
       </ReactFlow>
     </div>
   );

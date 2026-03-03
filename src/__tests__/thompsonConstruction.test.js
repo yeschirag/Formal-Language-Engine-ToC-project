@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { thompsonConstruction, resetStateCounter } from '../algorithms/thompsonConstruction';
+import { thompsonConstruction } from '../algorithms/thompsonConstruction';
 import { regexToPostfix } from '../algorithms/regexToPostfix';
 
 describe('thompsonConstruction', () => {
