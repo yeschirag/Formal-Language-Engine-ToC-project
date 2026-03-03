@@ -3,6 +3,7 @@ import './App.css';
 import RegexInput from './components/RegexInput';
 import AutomatonGraph from './components/AutomatonGraph';
 import ComingSoonPanel from './components/ComingSoonPanel';
+import FAToRegexPlayground from './components/FAToRegexPlayground';
 import { Button } from './components/ui/Button';
 import { GlowCard } from './components/ui/GlowCard';
 import StarField from './components/ui/StarField';
@@ -11,7 +12,7 @@ import { validateRegex } from './algorithms/regexValidator';
 import { regexToPostfix } from './algorithms/regexToPostfix';
 import { thompsonConstruction } from './algorithms/thompsonConstruction';
 
-function LandingPage({ onLaunch }) {
+function LandingPage({ onLaunch, onFaToRegex }) {
   return (
     <div className="landing-page">
       <StarField />
@@ -36,20 +37,29 @@ function LandingPage({ onLaunch }) {
       </div>
 
       <div className="landing-features">
-        <GlowCard className="animate-fade-in-delay-1">
+        <GlowCard className="animate-fade-in-delay-1 landing-card-clickable" onClick={onLaunch}>
           <div className="feature-icon">🔤</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">Regex to ε-NFA</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Convert regular expressions to epsilon-NFA using Thompson&apos;s Construction algorithm.</p>
+          <span className="landing-card-badge">Open →</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-2">
+        <GlowCard className="animate-fade-in-delay-2 landing-card-clickable" onClick={onFaToRegex}>
+          <div className="feature-icon">🔁</div>
+          <h3 className="text-sm font-semibold text-foreground mb-1">FA to Regex</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">Build a finite automaton interactively and generate its equivalent regular expression via state elimination.</p>
+          <span className="landing-card-badge">Open →</span>
+        </GlowCard>
+        <GlowCard className="animate-fade-in-delay-3">
           <div className="feature-icon">⚙️</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">DFA Conversion</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Transform ε-NFA into deterministic finite automata with subset construction.</p>
+          <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full border border-border mt-2 inline-block">Coming Soon</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-3">
+        <GlowCard className="animate-fade-in-delay-4">
           <div className="feature-icon">✂️</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">DFA Minimization</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Minimize DFA states using partition refinement for optimal automata.</p>
+          <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full border border-border mt-2 inline-block">Coming Soon</span>
         </GlowCard>
       </div>
     </div>
@@ -60,7 +70,7 @@ function Simulator() {
   const [automaton, setAutomaton] = useState(null);
   const [currentRegex, setCurrentRegex] = useState('');
   const [error, setError] = useState('');
-  const [showLanding, setShowLanding] = useState(true);
+  const [view, setView] = useState('landing');
 
   const handleGenerate = (regex) => {
     setError('');
@@ -79,8 +89,17 @@ function Simulator() {
     setCurrentRegex(regex);
   };
 
-  if (showLanding) {
-    return <LandingPage onLaunch={() => setShowLanding(false)} />;
+  if (view === 'landing') {
+    return (
+      <LandingPage
+        onLaunch={() => setView('regex-to-nfa')}
+        onFaToRegex={() => setView('fa-to-regex')}
+      />
+    );
+  }
+
+  if (view === 'fa-to-regex') {
+    return <FAToRegexPlayground onBack={() => setView('landing')} />;
   }
 
   return (
@@ -88,7 +107,7 @@ function Simulator() {
       <StarField />
       <header className="app-header">
         <div className="app-nav">
-          <Button variant="outline" size="sm" onClick={() => setShowLanding(true)}>
+          <Button variant="outline" size="sm" onClick={() => setView('landing')}>
             ← Home
           </Button>
           <ThemeToggle />
