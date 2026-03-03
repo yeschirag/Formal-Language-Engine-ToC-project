@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test/debug scripts
+*.mjs
+test_*.js
+verify_*.js
+trace_*.js
