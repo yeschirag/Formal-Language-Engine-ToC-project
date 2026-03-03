@@ -11,51 +11,35 @@
 }
 
 .landing-hero {
-  max-width: 720px;
-  margin-bottom: 48px;
+  max-width: 640px;
+  margin-bottom: 64px;
 }
 
 .landing-title {
-  font-size: 56px;
+  font-size: 48px;
   font-weight: 800;
-  color: #fafafa;
-  margin: 0 0 8px 0;
+  color: hsl(var(--foreground));
+  margin: 0 0 16px 0;
   letter-spacing: -1.5px;
   line-height: 1.1;
 }
 
 .landing-title-accent {
-  background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #6366f1;
 }
 
 .landing-tagline {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--brand-accent-dark);
-  background: var(--glass-bg-strong);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border-strong);
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--glass-shadow);
-  font-family: inherit;
-}
-
-.landing-cta:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+  font-size: 17px;
+  font-weight: 400;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 32px 0;
+  line-height: 1.7;
 }
 
 .landing-features {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   max-width: 820px;
   width: 100%;
 }
@@ -63,21 +47,6 @@
 .feature-icon {
   font-size: 28px;
   margin-bottom: 12px;
-}
-
-.feature-card h3 {
-  margin: 0 0 6px 0;
-  font-size: 15px;
-  font-weight: 600;
-  color: #fafafa;
-}
-
-.feature-card p {
-  margin: 0;
-  font-size: 13px;
-  color: #a1a1aa;
-  font-weight: 300;
-  line-height: 1.6;
 }
 
 /* ===== Simulator (App Container) ===== */
@@ -106,16 +75,16 @@
 
 .app-title {
   margin: 0 0 4px 0;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
-  color: #fafafa;
+  color: hsl(var(--foreground));
 }
 
 .app-subtitle {
   margin: 0 0 16px 0;
-  color: #71717a;
+  color: hsl(var(--muted-foreground));
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .input-section {
@@ -125,13 +94,38 @@
 
 .error-message {
   color: #fca5a5;
-  background: rgba(220, 38, 38, 0.1);
-  border: 1px solid rgba(220, 38, 38, 0.2);
-  border-radius: 10px;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.15);
+  border-radius: 8px;
   padding: 8px 14px;
   font-size: 14px;
   margin: 10px 0 0 0;
   text-align: left;
+}
+
+.regex-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0 0;
+  padding: 8px 14px;
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.regex-display-label {
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.regex-display-value {
+  color: #6366f1;
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .main-layout {
@@ -142,9 +136,9 @@
 }
 
 .panel {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -158,17 +152,19 @@
 .panel-title {
   margin: 0;
   padding: 12px 20px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #fafafa;
-  background: rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: hsl(var(--foreground));
+  background: hsl(var(--secondary));
+  border-bottom: 1px solid hsl(var(--border));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .panel-content {
   flex: 1;
   min-height: 0;
-  background: rgba(9, 9, 11, 0.6);
+  background: hsl(var(--card));
 }
 
 .side-panels {
@@ -189,7 +185,7 @@
   }
 
   .landing-tagline {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .landing-features {
@@ -203,4 +199,35 @@
   .nfa-panel {
     min-height: 350px;
   }
+}
+
+/* ===== Subtle fade-in animation ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fade-in-delay-1 {
+  animation: fadeInUp 0.5s ease-out 0.1s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay-2 {
+  animation: fadeInUp 0.5s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-delay-3 {
+  animation: fadeInUp 0.5s ease-out 0.3s forwards;
+  opacity: 0;
 }

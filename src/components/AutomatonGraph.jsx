@@ -34,14 +34,14 @@ function automatonToFlow(automaton) {
       data: { label },
       position: { x: col * SPACING_X + 50, y: row * SPACING_Y + 50 },
       style: {
-        border: isAccept ? '3px double #818cf8' : '2px solid #3f3f46',
+        border: isAccept ? '3px double #6366f1' : '2px solid hsl(215, 28%, 17%)',
         borderRadius: '50%',
         width: 60,
         height: 60,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isStart ? '#1e1b4b' : isAccept ? '#312e81' : '#18181b',
+        background: isStart ? '#1e1b4b' : isAccept ? '#312e81' : 'hsl(224, 71%, 4%)',
         fontSize: '12px',
         fontWeight: isStart || isAccept ? 'bold' : 'normal',
         color: '#e4e4e7',
@@ -71,11 +71,11 @@ function automatonToFlow(automaton) {
       source: from,
       target: to,
       label: labels.join(', '),
-      type: from === to ? 'default' : 'default',
+      type: 'default',
       markerEnd: { type: MarkerType.ArrowClosed, color: '#6366f1' },
       style: { stroke: '#6366f1' },
-      labelStyle: { fontSize: 12, fontWeight: 'bold', fill: '#a1a1aa' },
-      labelBgStyle: { fill: '#18181b', fillOpacity: 0.8 },
+      labelStyle: { fontSize: 12, fontWeight: 'bold', fill: '#94a3b8' },
+      labelBgStyle: { fill: 'hsl(224, 71%, 4%)', fillOpacity: 0.9 },
     });
   }
 
@@ -90,17 +90,9 @@ export default function AutomatonGraph({ automaton }) {
 
   if (!automaton) {
     return (
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-        color: '#52525b',
-        gap: '8px',
-      }}>
-        <span style={{ fontSize: '32px' }} role="img" aria-label="Search">🔍</span>
-        <span style={{ fontWeight: 500, color: '#71717a' }}>Enter a regex and click Generate to see the ε-NFA.</span>
+      <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
+        <span className="text-3xl" role="img" aria-label="Search">🔍</span>
+        <span className="text-sm font-medium">Enter a regex and click Generate to see the ε-NFA.</span>
       </div>
     );
   }
@@ -113,7 +105,7 @@ export default function AutomatonGraph({ automaton }) {
         fitView
         attributionPosition="bottom-left"
       >
-        <Background color="#27272a" gap={16} />
+        <Background color="#1e293b" gap={16} />
         <Controls />
       </ReactFlow>
     </div>
