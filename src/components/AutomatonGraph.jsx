@@ -6,6 +6,11 @@ import {
   MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import StateNode from './nodes/StateNode';
+import TransitionEdge from './edges/TransitionEdge';
+
+const nodeTypes = { stateNode: StateNode };
+const edgeTypes = { transition: TransitionEdge };
 
 /**
  * Converts an Automaton object to React Flow nodes and edges.
@@ -14,8 +19,8 @@ function automatonToFlow(automaton) {
   if (!automaton) return { nodes: [], edges: [] };
 
   const { states, transitions, startState, acceptStates } = automaton;
-  const SPACING_X = 200;
-  const SPACING_Y = 140;
+  const SPACING_X = 220;
+  const SPACING_Y = 160;
   const COLS = Math.max(3, Math.ceil(Math.sqrt(states.length)));
 
   const nodes = states.map((state, i) => {
@@ -24,33 +29,19 @@ function automatonToFlow(automaton) {
     const isStart = state === startState;
     const isAccept = acceptStates.includes(state);
 
-    let label = state;
-    if (isStart && isAccept) label = `→ ${state} ★`;
-    else if (isStart) label = `→ ${state}`;
-    else if (isAccept) label = `${state} ★`;
+    let stateType = 'normal';
+    if (isStart && isAccept) stateType = 'accept';
+    else if (isStart) stateType = 'start';
+    else if (isAccept) stateType = 'accept';
 
     return {
       id: state,
-      data: { label },
+      type: 'stateNode',
+      data: { label: state, stateType },
       position: { x: col * SPACING_X + 50, y: row * SPACING_Y + 50 },
-      style: {
-        border: isAccept ? '3px double #6366f1' : '2px solid #3b82f6',
-        borderRadius: '50%',
-        width: 70,
-        height: 70,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: isStart ? '#1e3a8a' : isAccept ? '#1e40af' : 'hsl(224, 71%, 8%)',
-        fontSize: '13px',
-        fontWeight: isStart || isAccept ? 'bold' : '600',
-        color: '#f1f5f9',
-        boxShadow: isStart || isAccept ? '0 0 20px rgba(99, 102, 241, 0.4)' : '0 2px 8px rgba(0, 0, 0, 0.3)',
-      },
     };
   });
 
-  const edges = [];
   const edgeMap = new Map();
 
   for (const [fromState, symbolMap] of Object.entries(transitions)) {
@@ -66,32 +57,24 @@ function automatonToFlow(automaton) {
     }
   }
 
+  const edges = [];
   for (const [key, { from, to, labels }] of edgeMap) {
     const isSelfLoop = from === to;
     edges.push({
       id: key,
       source: from,
       target: to,
-      label: labels.join(', '),
-      type: isSelfLoop ? 'default' : 'smoothstep',
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#6366f1', width: 20, height: 20 },
-      style: {
-        stroke: '#6366f1',
-        strokeWidth: 2.5,
+      type: 'transition',
+      sourceHandle: isSelfLoop ? 'top-src' : undefined,
+      targetHandle: isSelfLoop ? 'top' : undefined,
+      data: { label: labels.join(', ') },
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: '#999',
+        width: 16,
+        height: 16,
       },
-      labelStyle: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        fill: '#e0e7ff',
-        fontFamily: 'monospace',
-      },
-      labelBgStyle: {
-        fill: 'hsl(224, 71%, 4%)',
-        fillOpacity: 0.95,
-        rx: 4,
-        ry: 4,
-      },
-      labelBgPadding: [8, 6],
+      style: { stroke: '#999', strokeWidth: 1.8 },
       animated: labels.includes('ε'),
     });
   }
@@ -119,6 +102,8 @@ export default function AutomatonGraph({ automaton }) {
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
         fitViewOptions={{ padding: 0.2, maxZoom: 1.2 }}
         attributionPosition="bottom-left"
@@ -128,7 +113,7 @@ export default function AutomatonGraph({ automaton }) {
         nodesConnectable={false}
         elementsSelectable={true}
       >
-        <Background color="#334155" gap={20} size={1} />
+        <Background color="#d0d0d0" gap={24} size={1.5} variant="dots" />
         <Controls showInteractive={false} />
       </ReactFlow>
     </div>

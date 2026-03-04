@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   ReactFlow,
   Background,
@@ -12,16 +12,22 @@ import { faToRegex } from '../algorithms/faToRegex';
 import { Button } from './ui/Button';
 import { ThemeToggle } from './ui/ThemeToggle';
 import StarField from './ui/StarField';
+import StateNode from './nodes/StateNode';
+import TransitionEdge from './edges/TransitionEdge';
+
+// ── Custom node/edge types (memoized outside component) ──────────────────
+const nodeTypes = { stateNode: StateNode };
+const edgeTypes = { transition: TransitionEdge };
 
 // ── Graph helpers ──────────────────────────────────────────────────────────
 
 function computeDefaultPosition(index, total) {
   if (total === 1) return { x: 200, y: 180 };
-  const R = Math.max(130, total * 38);
+  const R = Math.max(150, total * 50);
   const angle = (2 * Math.PI * index) / total - Math.PI / 2;
   return {
-    x: R + 60 + R * Math.cos(angle),
-    y: R + 60 + R * Math.sin(angle),
+    x: R + 80 + R * Math.cos(angle),
+    y: R + 80 + R * Math.sin(angle),
   };
 }
 
@@ -32,32 +38,16 @@ function buildNodes(states, startState, acceptStates, prevNodes) {
   return states.map((state, i) => {
     const isStart = state === startState;
     const isAccept = acceptStates.includes(state);
-    let label = state;
-    if (isStart && isAccept) label = `→${state} ★`;
-    else if (isStart) label = `→${state}`;
-    else if (isAccept) label = `${state} ★`;
+    let stateType = 'normal';
+    if (isStart && isAccept) stateType = 'accept';
+    else if (isStart) stateType = 'start';
+    else if (isAccept) stateType = 'accept';
 
     return {
       id: state,
-      data: { label },
+      type: 'stateNode',
+      data: { label: state, stateType },
       position: posMap[state] ?? computeDefaultPosition(i, states.length),
-      style: {
-        border: isAccept ? '3px double #6366f1' : '2px solid #3b82f6',
-        borderRadius: '50%',
-        width: 64,
-        height: 64,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: isStart ? '#1e3a8a' : isAccept ? '#1e40af' : 'hsl(224, 71%, 8%)',
-        fontSize: '12px',
-        fontWeight: isStart || isAccept ? 'bold' : '600',
-        color: '#f1f5f9',
-        boxShadow:
-          isStart || isAccept
-            ? '0 0 18px rgba(99,102,241,0.45)'
-            : '0 2px 8px rgba(0,0,0,0.3)',
-      },
     };
   });
 }
@@ -80,27 +70,22 @@ function buildEdges(transitions) {
 
   const edges = [];
   for (const [key, { from, to, labels }] of edgeMap) {
+    const isSelfLoop = from === to;
     edges.push({
       id: key,
       source: from,
       target: to,
-      label: labels.join(', '),
-      type: from === to ? 'default' : 'smoothstep',
+      type: 'transition',
+      sourceHandle: isSelfLoop ? 'top-src' : undefined,
+      targetHandle: isSelfLoop ? 'top' : undefined,
+      data: { label: labels.join(', ') },
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: '#6366f1',
-        width: 20,
-        height: 20,
+        color: '#999',
+        width: 16,
+        height: 16,
       },
-      style: { stroke: '#6366f1', strokeWidth: 2.5 },
-      labelStyle: {
-        fontSize: 13,
-        fontWeight: 'bold',
-        fill: '#e0e7ff',
-        fontFamily: 'monospace',
-      },
-      labelBgStyle: { fill: 'hsl(224, 71%, 4%)', fillOpacity: 0.95 },
-      labelBgPadding: [7, 5],
+      style: { stroke: '#999', strokeWidth: 1.8 },
     });
   }
   return edges;
@@ -124,6 +109,9 @@ export default function FAToRegexPlayground({ onBack }) {
   // Result
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+
+  // Mobile panel toggle
+  const [showControls, setShowControls] = useState(true);
 
   // React Flow state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -251,7 +239,16 @@ export default function FAToRegexPlayground({ onBack }) {
           <Button variant="outline" size="sm" onClick={onBack}>
             ← Home
           </Button>
-          <ThemeToggle />
+          <div className="app-nav-right">
+            <button
+              className="fa-panel-toggle"
+              onClick={() => setShowControls(v => !v)}
+              aria-label="Toggle controls panel"
+            >
+              {showControls ? '⚙️ Hide Panel' : '⚙️ Show Panel'}
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
         <h1 className="app-title">FA → Regex Converter</h1>
         <p className="app-subtitle">
@@ -261,7 +258,7 @@ export default function FAToRegexPlayground({ onBack }) {
 
       <main className="fa-regex-layout">
         {/* ── Left controls panel ── */}
-        <aside className="fa-controls-panel panel">
+        <aside className={`fa-controls-panel panel ${showControls ? '' : 'fa-controls-hidden'}`}>
           {/* States */}
           <section className="fa-section">
             <h3 className="fa-section-title">States</h3>
@@ -404,7 +401,14 @@ export default function FAToRegexPlayground({ onBack }) {
 
         {/* ── Right: graph ── */}
         <section className="panel fa-graph-panel">
-          <h2 className="panel-title">FA Graph</h2>
+          <h2 className="panel-title">
+            FA Graph
+            <span className="panel-title-legend">
+              <span className="legend-dot legend-start"></span> Start
+              <span className="legend-dot legend-accept"></span> Accept
+              <span className="legend-dot legend-normal"></span> Normal
+            </span>
+          </h2>
           <div className="panel-content">
             {states.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
@@ -420,6 +424,8 @@ export default function FAToRegexPlayground({ onBack }) {
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange}
+                nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 fitView
                 fitViewOptions={{ padding: 0.3, maxZoom: 1.4 }}
                 nodesDraggable
@@ -429,7 +435,7 @@ export default function FAToRegexPlayground({ onBack }) {
                 maxZoom={2}
                 attributionPosition="bottom-left"
               >
-                <Background color="#334155" gap={20} size={1} />
+                <Background color="#d0d0d0" gap={24} size={1.5} variant="dots" />
                 <Controls showInteractive={false} />
               </ReactFlow>
             )}
