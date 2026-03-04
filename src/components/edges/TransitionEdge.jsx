@@ -12,43 +12,29 @@ export default function TransitionEdge({
     markerEnd,
     style = {},
 }) {
-    const isSelfLoop = sourceX === targetX && sourceY === targetY;
+    // Use data flag for reliable self-loop detection (coordinates may differ
+    // because source/target handles are offset on the same node)
+    const isSelfLoop = data?.isSelfLoop ?? (sourceX === targetX && sourceY === targetY);
 
     let edgePath = '';
     let labelX = sourceX;
     let labelY = sourceY;
 
     if (isSelfLoop) {
-        const offset = 80; // How far out the loop extends
-        const spread = 50; // How wide the loop is at its peak
-        let cp1X, cp1Y, cp2X, cp2Y;
+        // Draw a clearly visible loop above the node
+        const loopHeight = 55;
+        const loopWidth = 28;
+        const midX = (sourceX + targetX) / 2;
+        const midY = Math.min(sourceY, targetY);
 
-        switch (sourcePosition) {
-            case 'bottom':
-                cp1X = sourceX - spread; cp1Y = sourceY + offset;
-                cp2X = targetX + spread; cp2Y = targetY + offset;
-                labelX = sourceX; labelY = sourceY + offset - 15;
-                break;
-            case 'left':
-                cp1X = sourceX - offset; cp1Y = sourceY - spread;
-                cp2X = targetX - offset; cp2Y = targetY + spread;
-                labelX = sourceX - offset + 15; labelY = sourceY;
-                break;
-            case 'right':
-                cp1X = sourceX + offset; cp1Y = sourceY - spread;
-                cp2X = targetX + offset; cp2Y = targetY + spread;
-                labelX = sourceX + offset - 15; labelY = sourceY;
-                break;
-            case 'top':
-            default:
-                cp1X = sourceX - spread; cp1Y = sourceY - offset;
-                // Important: use targetX/targetY for cp2 to anchor properly
-                cp2X = targetX + spread; cp2Y = targetY - offset;
-                labelX = sourceX; labelY = sourceY - offset + 15;
-                break;
-        }
+        const cp1X = midX - loopWidth;
+        const cp1Y = midY - loopHeight;
+        const cp2X = midX + loopWidth;
+        const cp2Y = midY - loopHeight;
 
         edgePath = `M ${sourceX} ${sourceY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${targetX} ${targetY}`;
+        labelX = midX;
+        labelY = midY - loopHeight + 10;
     } else {
         try {
             const res = getBezierPath({

@@ -225,6 +225,43 @@
   background: hsl(var(--card));
 }
 
+/* ===== FA State Info Bar (start / accept / type) ===== */
+.fa-state-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 20px;
+  background: hsl(var(--secondary));
+  border-bottom: 1px solid hsl(var(--border));
+  flex-wrap: wrap;
+}
+
+.fa-state-info-item {
+  font-size: 12px;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.fa-state-info-item strong {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: hsl(var(--foreground));
+}
+
+.fa-info-start {
+  color: #5B9BD5;
+}
+
+.fa-info-accept {
+  color: #4DB870;
+}
+
+.fa-info-type {
+  color: #a5b4fc;
+}
+
 .side-panels {
   flex: 1;
   display: flex;

@@ -39,7 +39,7 @@ function buildNodes(states, startState, acceptStates, prevNodes) {
     const isStart = state === startState;
     const isAccept = acceptStates.includes(state);
     let stateType = 'normal';
-    if (isStart && isAccept) stateType = 'accept';
+    if (isStart && isAccept) stateType = 'startAccept';
     else if (isStart) stateType = 'start';
     else if (isAccept) stateType = 'accept';
 
@@ -78,7 +78,7 @@ function buildEdges(transitions) {
       type: 'transition',
       sourceHandle: isSelfLoop ? 'top-src' : undefined,
       targetHandle: isSelfLoop ? 'top' : undefined,
-      data: { label: labels.join(', ') },
+      data: { label: labels.join(', '), isSelfLoop },
       markerEnd: {
         type: MarkerType.ArrowClosed,
         color: '#999',
@@ -408,6 +408,19 @@ export default function FAToRegexPlayground() {
               <span className="legend-dot legend-normal"></span> Normal
             </span>
           </h2>
+          {states.length > 0 && (
+            <div className="fa-state-info">
+              <span className="fa-state-info-item fa-info-start">
+                ▶ Start: <strong>{startState || '—'}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-accept">
+                ★ Accept: <strong>{acceptStates.length > 0 ? acceptStates.join(', ') : '—'}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-type">
+                Type: <strong>NFA / DFA</strong>
+              </span>
+            </div>
+          )}
           <div className="panel-content">
             {states.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">

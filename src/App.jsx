@@ -114,7 +114,27 @@ function RegexToNFA() {
 
       <main className="main-layout">
         <section className="panel nfa-panel">
-          <h2 className="panel-title">ε-NFA (Thompson Construction)</h2>
+          <h2 className="panel-title">
+            ε-NFA (Thompson Construction)
+            <span className="panel-title-legend">
+              <span className="legend-dot legend-start"></span> Start
+              <span className="legend-dot legend-accept"></span> Accept
+              <span className="legend-dot legend-normal"></span> Normal
+            </span>
+          </h2>
+          {automaton && (
+            <div className="fa-state-info">
+              <span className="fa-state-info-item fa-info-start">
+                ▶ Start: <strong>{automaton.startState}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-accept">
+                ★ Accept: <strong>{automaton.acceptStates.join(', ')}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-type">
+                Type: <strong>ε-NFA</strong>
+              </span>
+            </div>
+          )}
           <div className="panel-content">
             <AutomatonGraph automaton={automaton} />
           </div>
