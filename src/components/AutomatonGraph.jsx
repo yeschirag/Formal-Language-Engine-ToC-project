@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -91,18 +91,19 @@ function automatonToFlow(automaton, prevNodes) {
 export default function AutomatonGraph({ automaton }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
+  const prevNodesRef = useRef([]);
 
   useEffect(() => {
     if (!automaton) {
       setNodes([]);
       setEdges([]);
+      prevNodesRef.current = [];
       return;
     }
-    setNodes(prev => {
-      const { nodes: newNodes, edges: newEdges } = automatonToFlow(automaton, prev);
-      setEdges(newEdges);
-      return newNodes;
-    });
+    const { nodes: newNodes, edges: newEdges } = automatonToFlow(automaton, prevNodesRef.current);
+    prevNodesRef.current = newNodes;
+    setNodes(newNodes);
+    setEdges(newEdges);
   }, [automaton, setNodes, setEdges]);
 
   if (!automaton) {

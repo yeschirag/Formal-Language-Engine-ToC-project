@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
@@ -93,6 +93,29 @@ function buildEdges(transitions) {
 
 // ── Component ──────────────────────────────────────────────────────────────
 
+/**
+ * Determine whether the FA is a DFA or NFA based on its transitions.
+ * An FA is a DFA if every state has exactly one target per symbol and
+ * there are no ε-transitions. Otherwise it is an NFA.
+ */
+function classifyFA(states, transitions) {
+  const allSymbols = new Set();
+  for (const symbolMap of Object.values(transitions)) {
+    for (const sym of Object.keys(symbolMap)) {
+      if (sym === 'ε' || sym === 'epsilon') return 'NFA';
+      allSymbols.add(sym);
+    }
+  }
+  for (const state of states) {
+    const symbolMap = transitions[state] || {};
+    for (const sym of allSymbols) {
+      const targets = symbolMap[sym] || [];
+      if (targets.length !== 1) return 'NFA';
+    }
+  }
+  return allSymbols.size > 0 ? 'DFA' : 'NFA';
+}
+
 export default function FAToRegexPlayground() {
   const navigate = useNavigate();
   // FA state
@@ -123,6 +146,9 @@ export default function FAToRegexPlayground() {
     setNodes(prev => buildNodes(states, startState, acceptStates, prev));
     setEdges(buildEdges(transitions));
   }, [states, startState, acceptStates, transitions, setNodes, setEdges]);
+
+  // Dynamically classify the automaton as NFA or DFA
+  const faType = useMemo(() => classifyFA(states, transitions), [states, transitions]);
 
   // ── FA mutation helpers ──
 
@@ -417,7 +443,7 @@ export default function FAToRegexPlayground() {
                 ★ Accept: <strong>{acceptStates.length > 0 ? acceptStates.join(', ') : '—'}</strong>
               </span>
               <span className="fa-state-info-item fa-info-type">
-                Type: <strong>NFA / DFA</strong>
+                Type: <strong>{faType}</strong>
               </span>
             </div>
           )}
