@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
@@ -39,7 +39,7 @@ function buildNodes(states, startState, acceptStates, prevNodes) {
     const isStart = state === startState;
     const isAccept = acceptStates.includes(state);
     let stateType = 'normal';
-    if (isStart && isAccept) stateType = 'accept';
+    if (isStart && isAccept) stateType = 'startAccept';
     else if (isStart) stateType = 'start';
     else if (isAccept) stateType = 'accept';
 
@@ -78,7 +78,7 @@ function buildEdges(transitions) {
       type: 'transition',
       sourceHandle: isSelfLoop ? 'top-src' : undefined,
       targetHandle: isSelfLoop ? 'top' : undefined,
-      data: { label: labels.join(', ') },
+      data: { label: labels.join(', '), isSelfLoop },
       markerEnd: {
         type: MarkerType.ArrowClosed,
         color: '#999',
@@ -92,6 +92,29 @@ function buildEdges(transitions) {
 }
 
 // ── Component ──────────────────────────────────────────────────────────────
+
+/**
+ * Determine whether the FA is a DFA or NFA based on its transitions.
+ * An FA is a DFA if every state has exactly one target per symbol and
+ * there are no ε-transitions. Otherwise it is an NFA.
+ */
+function classifyFA(states, transitions) {
+  const allSymbols = new Set();
+  for (const symbolMap of Object.values(transitions)) {
+    for (const sym of Object.keys(symbolMap)) {
+      if (sym === 'ε' || sym === 'epsilon') return 'NFA';
+      allSymbols.add(sym);
+    }
+  }
+  for (const state of states) {
+    const symbolMap = transitions[state] || {};
+    for (const sym of allSymbols) {
+      const targets = symbolMap[sym] || [];
+      if (targets.length !== 1) return 'NFA';
+    }
+  }
+  return allSymbols.size > 0 ? 'DFA' : 'NFA';
+}
 
 export default function FAToRegexPlayground() {
   const navigate = useNavigate();
@@ -123,6 +146,9 @@ export default function FAToRegexPlayground() {
     setNodes(prev => buildNodes(states, startState, acceptStates, prev));
     setEdges(buildEdges(transitions));
   }, [states, startState, acceptStates, transitions, setNodes, setEdges]);
+
+  // Dynamically classify the automaton as NFA or DFA
+  const faType = useMemo(() => classifyFA(states, transitions), [states, transitions]);
 
   // ── FA mutation helpers ──
 
@@ -408,6 +434,19 @@ export default function FAToRegexPlayground() {
               <span className="legend-dot legend-normal"></span> Normal
             </span>
           </h2>
+          {states.length > 0 && (
+            <div className="fa-state-info">
+              <span className="fa-state-info-item fa-info-start">
+                ▶ Start: <strong>{startState || '—'}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-accept">
+                ★ Accept: <strong>{acceptStates.length > 0 ? acceptStates.join(', ') : '—'}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-type">
+                Type: <strong>{faType}</strong>
+              </span>
+            </div>
+          )}
           <div className="panel-content">
             {states.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
