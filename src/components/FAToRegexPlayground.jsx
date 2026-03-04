@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ReactFlow,
   Background,
@@ -11,7 +12,6 @@ import '@xyflow/react/dist/style.css';
 import { faToRegex } from '../algorithms/faToRegex';
 import { Button } from './ui/Button';
 import { ThemeToggle } from './ui/ThemeToggle';
-import StarField from './ui/StarField';
 import StateNode from './nodes/StateNode';
 import TransitionEdge from './edges/TransitionEdge';
 
@@ -93,7 +93,8 @@ function buildEdges(transitions) {
 
 // ── Component ──────────────────────────────────────────────────────────────
 
-export default function FAToRegexPlayground({ onBack }) {
+export default function FAToRegexPlayground() {
+  const navigate = useNavigate();
   // FA state
   const [states, setStates] = useState(['q0', 'q1']);
   const [startState, setStartState] = useState('q0');
@@ -232,11 +233,9 @@ export default function FAToRegexPlayground({ onBack }) {
 
   return (
     <div className="app-container">
-      <StarField />
-
       <header className="app-header">
         <div className="app-nav">
-          <Button variant="outline" size="sm" onClick={onBack}>
+          <Button variant="outline" size="sm" onClick={() => navigate('/')}>
             ← Home
           </Button>
           <div className="app-nav-right">
