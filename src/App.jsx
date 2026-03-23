@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import './App.css';
 import RegexInput from './components/RegexInput';
 import AutomatonGraph from './components/AutomatonGraph';
@@ -7,7 +8,6 @@ import DFAMinimizationPanel from './components/DFAMinimizationPanel';
 import FAToRegexPlayground from './components/FAToRegexPlayground';
 import { Button } from './components/ui/Button';
 import { GlowCard } from './components/ui/GlowCard';
-import StarField from './components/ui/StarField';
 import { ThemeToggle } from './components/ui/ThemeToggle';
 import { validateRegex } from './algorithms/regexValidator';
 import { regexToPostfix } from './algorithms/regexToPostfix';
@@ -15,10 +15,10 @@ import { thompsonConstruction } from './algorithms/thompsonConstruction';
 import { nfaToDfa } from './algorithms/nfaToDfa';
 import { minimizeDfa } from './algorithms/dfaMinimization';
 
-function LandingPage({ onLaunch, onFaToRegex }) {
+function LandingPage() {
+  const navigate = useNavigate();
   return (
     <div className="landing-page">
-      <StarField />
       <div className="absolute top-4 right-6 z-10">
         <ThemeToggle />
       </div>
@@ -34,31 +34,31 @@ function LandingPage({ onLaunch, onFaToRegex }) {
           Explore the foundations of computation — visualize regular expressions,
           automata, and language transformations in an interactive simulator.
         </p>
-        <Button size="lg" onClick={onLaunch}>
+        <Button size="lg" onClick={() => navigate('/regex-to-nfa')}>
           Launch Simulator →
         </Button>
       </div>
 
       <div className="landing-features">
-        <GlowCard className="animate-fade-in-delay-1 landing-card-clickable" onClick={onLaunch}>
+        <GlowCard className="animate-fade-in-delay-1 landing-card-clickable" onClick={() => navigate('/regex-to-nfa')}>
           <div className="feature-icon">🔤</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">Regex to ε-NFA</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Convert regular expressions to epsilon-NFA using Thompson&apos;s Construction algorithm.</p>
           <span className="landing-card-badge">Open →</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-2 landing-card-clickable" onClick={onFaToRegex}>
+        <GlowCard className="animate-fade-in-delay-2 landing-card-clickable" onClick={() => navigate('/fa-to-regex')}>
           <div className="feature-icon">🔁</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">FA to Regex</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Build a finite automaton interactively and generate its equivalent regular expression via state elimination.</p>
           <span className="landing-card-badge">Open →</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-3 landing-card-clickable" onClick={onLaunch}>
+        <GlowCard className="animate-fade-in-delay-3 landing-card-clickable" onClick={() => navigate('/regex-to-nfa')}>
           <div className="feature-icon">⚙️</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">DFA Conversion</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Transform ε-NFA into deterministic finite automata with subset construction.</p>
           <span className="landing-card-badge">Open →</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-4 landing-card-clickable" onClick={onLaunch}>
+        <GlowCard className="animate-fade-in-delay-4 landing-card-clickable" onClick={() => navigate('/regex-to-nfa')}>
           <div className="feature-icon">✂️</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">DFA Minimization</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Minimize DFA states using partition refinement for optimal automata.</p>
@@ -69,11 +69,11 @@ function LandingPage({ onLaunch, onFaToRegex }) {
   );
 }
 
-function Simulator() {
+function RegexToNFA() {
+  const navigate = useNavigate();
   const [automaton, setAutomaton] = useState(null);
   const [currentRegex, setCurrentRegex] = useState('');
   const [error, setError] = useState('');
-  const [view, setView] = useState('landing');
 
   const handleGenerate = (regex) => {
     setError('');
@@ -96,25 +96,11 @@ function Simulator() {
   const dfa = useMemo(() => (automaton ? nfaToDfa(automaton) : null), [automaton]);
   const minDfa = useMemo(() => (dfa ? minimizeDfa(dfa) : null), [dfa]);
 
-  if (view === 'landing') {
-    return (
-      <LandingPage
-        onLaunch={() => setView('regex-to-nfa')}
-        onFaToRegex={() => setView('fa-to-regex')}
-      />
-    );
-  }
-
-  if (view === 'fa-to-regex') {
-    return <FAToRegexPlayground onBack={() => setView('landing')} />;
-  }
-
   return (
     <div className="app-container">
-      <StarField />
       <header className="app-header">
         <div className="app-nav">
-          <Button variant="outline" size="sm" onClick={() => setView('landing')}>
+          <Button variant="outline" size="sm" onClick={() => navigate('/')}>
             ← Home
           </Button>
           <ThemeToggle />
@@ -135,37 +121,59 @@ function Simulator() {
 
       <main className="main-layout">
         <section className="panel nfa-panel">
-          <h2 className="panel-title">ε-NFA (Thompson Construction)</h2>
+          <h2 className="panel-title">
+            ε-NFA (Thompson Construction)
+            <span className="panel-title-legend">
+              <span className="legend-dot legend-start"></span> Start
+              <span className="legend-dot legend-accept"></span> Accept
+              <span className="legend-dot legend-normal"></span> Normal
+            </span>
+          </h2>
+          {automaton && (
+            <div className="fa-state-info">
+              <span className="fa-state-info-item fa-info-start">
+                ▶ Start: <strong>{automaton.startState}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-accept">
+                ★ Accept: <strong>{automaton.acceptStates.join(', ')}</strong>
+              </span>
+              <span className="fa-state-info-item fa-info-type">
+                Type: <strong>ε-NFA</strong>
+              </span>
+            </div>
+          )}
           <div className="panel-content">
             <AutomatonGraph automaton={automaton} />
           </div>
         </section>
 
-        <aside className="side-panels">
-          <div className="side-panel">
-            <div className="panel" style={{ height: '100%' }}>
-              <h2 className="panel-title">DFA (Subset Construction)</h2>
-              <div className="panel-content">
-                <DFAConversionPanel automaton={dfa} />
-              </div>
-            </div>
+        <section className="panel">
+          <h2 className="panel-title">DFA (Subset Construction)</h2>
+          <div className="panel-content">
+            <DFAConversionPanel automaton={dfa} />
           </div>
-          <div className="side-panel">
-            <div className="panel" style={{ height: '100%' }}>
-              <h2 className="panel-title">Minimized DFA</h2>
-              <div className="panel-content">
-                <DFAMinimizationPanel dfa={minDfa} />
-              </div>
-            </div>
+        </section>
+
+        <section className="panel">
+          <h2 className="panel-title">Minimized DFA</h2>
+          <div className="panel-content">
+            <DFAMinimizationPanel dfa={minDfa} />
           </div>
-        </aside>
+        </section>
       </main>
     </div>
   );
 }
 
 function App() {
-  return <Simulator />;
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/regex-to-nfa" element={<RegexToNFA />} />
+      <Route path="/fa-to-regex" element={<FAToRegexPlayground />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
 }
 
 export default App;

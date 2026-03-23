@@ -28,3 +28,5 @@ dist-ssr
 test_*.js
 verify_*.js
 trace_*.js
+node_modules/
+dist/

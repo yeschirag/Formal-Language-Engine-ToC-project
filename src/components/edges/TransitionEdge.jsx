@@ -12,43 +12,29 @@ export default function TransitionEdge({
     markerEnd,
     style = {},
 }) {
-    const isSelfLoop = sourceX === targetX && sourceY === targetY;
+    // Use data flag for reliable self-loop detection (coordinates may differ
+    // because source/target handles are offset on the same node)
+    const isSelfLoop = data?.isSelfLoop ?? (sourceX === targetX && sourceY === targetY);
 
     let edgePath = '';
     let labelX = sourceX;
     let labelY = sourceY;
 
     if (isSelfLoop) {
-        const offset = 80; // How far out the loop extends
-        const spread = 50; // How wide the loop is at its peak
-        let cp1X, cp1Y, cp2X, cp2Y;
+        // Draw a clearly visible loop above the node
+        const loopHeight = 55;
+        const loopWidth = 28;
+        const midX = (sourceX + targetX) / 2;
+        const midY = Math.min(sourceY, targetY);
 
-        switch (sourcePosition) {
-            case 'bottom':
-                cp1X = sourceX - spread; cp1Y = sourceY + offset;
-                cp2X = targetX + spread; cp2Y = targetY + offset;
-                labelX = sourceX; labelY = sourceY + offset - 15;
-                break;
-            case 'left':
-                cp1X = sourceX - offset; cp1Y = sourceY - spread;
-                cp2X = targetX - offset; cp2Y = targetY + spread;
-                labelX = sourceX - offset + 15; labelY = sourceY;
-                break;
-            case 'right':
-                cp1X = sourceX + offset; cp1Y = sourceY - spread;
-                cp2X = targetX + offset; cp2Y = targetY + spread;
-                labelX = sourceX + offset - 15; labelY = sourceY;
-                break;
-            case 'top':
-            default:
-                cp1X = sourceX - spread; cp1Y = sourceY - offset;
-                // Important: use targetX/targetY for cp2 to anchor properly
-                cp2X = targetX + spread; cp2Y = targetY - offset;
-                labelX = sourceX; labelY = sourceY - offset + 15;
-                break;
-        }
+        const cp1X = midX - loopWidth;
+        const cp1Y = midY - loopHeight;
+        const cp2X = midX + loopWidth;
+        const cp2Y = midY - loopHeight;
 
         edgePath = `M ${sourceX} ${sourceY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${targetX} ${targetY}`;
+        labelX = midX;
+        labelY = midY - loopHeight + 10;
     } else {
         try {
             const res = getBezierPath({
@@ -76,9 +62,10 @@ export default function TransitionEdge({
             <path
                 id={id}
                 style={{
-                    stroke: '#999',
-                    strokeWidth: 1.8,
+                    stroke: 'hsl(var(--muted-foreground))',
+                    strokeWidth: 1.5,
                     fill: 'none',
+                    transition: 'stroke 0.2s',
                     ...style,
                 }}
                 className="react-flow__edge-path"
@@ -87,9 +74,9 @@ export default function TransitionEdge({
             />
             {label && (
                 <foreignObject
-                    width={60}
+                    width={80}
                     height={30}
-                    x={labelX - 30}
+                    x={labelX - 40}
                     y={labelY - 15}
                     requiredExtensions="http://www.w3.org/1999/xhtml"
                     style={{ overflow: 'visible', pointerEvents: 'none' }}
@@ -106,16 +93,18 @@ export default function TransitionEdge({
                     >
                         <span
                             style={{
-                                background: '#a0a0a0',
-                                color: '#fff',
+                                background: 'hsl(var(--card) / 0.8)',
+                                backdropFilter: 'blur(4px)',
+                                color: 'hsl(var(--foreground))',
+                                border: '1px solid hsl(var(--border))',
                                 fontSize: 11,
-                                fontWeight: 700,
-                                fontFamily: "'Inter', monospace",
-                                padding: '3px 10px',
+                                fontWeight: 600,
+                                fontFamily: "'SF Mono', 'Fira Code', monospace",
+                                padding: '4px 12px',
                                 borderRadius: 14,
                                 whiteSpace: 'nowrap',
-                                boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-                                letterSpacing: 0.3,
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                letterSpacing: 0.5,
                             }}
                         >
                             {label}

@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   ReactFlow,
   Background,
   Controls,
   MarkerType,
+  useNodesState,
+  useEdgesState,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import StateNode from './nodes/StateNode';
@@ -15,13 +17,17 @@ const edgeTypes = { transition: TransitionEdge };
 /**
  * Converts an Automaton object to React Flow nodes and edges.
  */
-function automatonToFlow(automaton) {
+function automatonToFlow(automaton, prevNodes) {
   if (!automaton) return { nodes: [], edges: [] };
 
   const { states, transitions, startState, acceptStates } = automaton;
   const SPACING_X = 220;
   const SPACING_Y = 160;
   const COLS = Math.max(3, Math.ceil(Math.sqrt(states.length)));
+
+  // Keep existing positions when possible (for drag persistence)
+  const posMap = {};
+  for (const n of prevNodes) posMap[n.id] = n.position;
 
   const nodes = states.map((state, i) => {
     const col = i % COLS;
@@ -30,7 +36,7 @@ function automatonToFlow(automaton) {
     const isAccept = acceptStates.includes(state);
 
     let stateType = 'normal';
-    if (isStart && isAccept) stateType = 'accept';
+    if (isStart && isAccept) stateType = 'startAccept';
     else if (isStart) stateType = 'start';
     else if (isAccept) stateType = 'accept';
 
@@ -38,7 +44,7 @@ function automatonToFlow(automaton) {
       id: state,
       type: 'stateNode',
       data: { label: state, stateType },
-      position: { x: col * SPACING_X + 50, y: row * SPACING_Y + 50 },
+      position: posMap[state] ?? { x: col * SPACING_X + 50, y: row * SPACING_Y + 50 },
     };
   });
 
@@ -67,7 +73,7 @@ function automatonToFlow(automaton) {
       type: 'transition',
       sourceHandle: isSelfLoop ? 'top-src' : undefined,
       targetHandle: isSelfLoop ? 'top' : undefined,
-      data: { label: labels.join(', ') },
+      data: { label: labels.join(', '), isSelfLoop },
       markerEnd: {
         type: MarkerType.ArrowClosed,
         color: '#999',
@@ -83,10 +89,22 @@ function automatonToFlow(automaton) {
 }
 
 export default function AutomatonGraph({ automaton }) {
-  const { nodes, edges } = useMemo(
-    () => automatonToFlow(automaton),
-    [automaton]
-  );
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
+  const prevNodesRef = useRef([]);
+
+  useEffect(() => {
+    if (!automaton) {
+      setNodes([]);
+      setEdges([]);
+      prevNodesRef.current = [];
+      return;
+    }
+    const { nodes: newNodes, edges: newEdges } = automatonToFlow(automaton, prevNodesRef.current);
+    prevNodesRef.current = newNodes;
+    setNodes(newNodes);
+    setEdges(newEdges);
+  }, [automaton, setNodes, setEdges]);
 
   if (!automaton) {
     return (
@@ -98,10 +116,11 @@ export default function AutomatonGraph({ automaton }) {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ flex: 1, position: 'relative', minHeight: 400, width: '100%', height: '100%' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
+        onNodesChange={onNodesChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView

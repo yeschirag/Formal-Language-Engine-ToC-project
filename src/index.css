@@ -38,25 +38,45 @@
 }
 
 .dark {
-  --background: 224 71% 4%;
+  --background: 228 15% 9%; /* Sleeker, deeper charcoal */
   --foreground: 210 40% 98%;
-  --card: 224 71% 4%;
+  --card: 228 15% 12%; /* Slightly elevated dark background */
   --card-foreground: 210 40% 98%;
-  --popover: 224 71% 4%;
+  --popover: 228 15% 12%;
   --popover-foreground: 210 40% 98%;
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 215 28% 17%;
+  --primary: 235 86% 65%; /* Vibrant indigo */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 228 15% 15%; /* Distinct but subtle secondary */
   --secondary-foreground: 210 40% 98%;
-  --muted: 215 28% 17%;
-  --muted-foreground: 217 10% 64%;
-  --accent: 215 28% 17%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 215 28% 17%;
-  --input: 215 28% 17%;
-  --ring: 224 64% 33%;
+  --muted: 228 15% 16%;
+  --muted-foreground: 215 14% 60%;
+  --accent: 235 86% 65%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 350 89% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 228 15% 20%;
+  --input: 228 15% 20%;
+  --ring: 235 86% 65%;
+  --radius: 0.75rem; /* Rounder cards */
+}
+
+/* Custom Scrollbar for sleek aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border) / 0.8);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
 }
 
 @layer base {

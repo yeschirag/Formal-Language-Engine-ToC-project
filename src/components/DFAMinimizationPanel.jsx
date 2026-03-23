@@ -31,42 +31,44 @@ export default function DFAMinimizationPanel({ dfa }) {
 
   return (
     <div className="dfa-panel-content">
-      <div className="dfa-stats">
-        <span className="dfa-stat">
-          <strong>{dfa.states.length}</strong> states
-        </span>
-        <span className="dfa-stat-sep">·</span>
-        <span className="dfa-stat">
-          <strong>{dfa.acceptStates.length}</strong> accept
-        </span>
-      </div>
-      <div className="dfa-table-wrapper">
-        <table className="dfa-table">
-          <thead>
-            <tr>
-              <th>State</th>
-              {dfa.alphabet.map(sym => (
-                <th key={sym}>{sym}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {transitionRows.map(row => (
-              <tr key={row.state} className={row.isAccept ? 'dfa-accept-row' : ''}>
-                <td className="dfa-state-cell">
-                  {row.isStart && <span className="dfa-marker dfa-start-marker">→</span>}
-                  {row.isAccept && <span className="dfa-marker dfa-accept-marker">★</span>}
-                  <span className="dfa-state-name">{row.state}</span>
-                </td>
-                {row.transitions.map((t, i) => (
-                  <td key={i} className="dfa-transition-cell">{t}</td>
+      <div className="dfa-sidebar">
+        <div className="dfa-stats">
+          <span className="dfa-stat">
+            <strong>{dfa.states.length}</strong> states
+          </span>
+          <span className="dfa-stat-sep">·</span>
+          <span className="dfa-stat">
+            <strong>{dfa.acceptStates.length}</strong> accept
+          </span>
+        </div>
+        <div className="dfa-table-wrapper">
+          <table className="dfa-table">
+            <thead>
+              <tr>
+                <th>State</th>
+                {dfa.alphabet.map(sym => (
+                  <th key={sym}>{sym}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {transitionRows.map(row => (
+                <tr key={row.state} className={row.isAccept ? 'dfa-accept-row' : ''}>
+                  <td className="dfa-state-cell">
+                    {row.isStart && <span className="dfa-marker dfa-start-marker">→</span>}
+                    {row.isAccept && <span className="dfa-marker dfa-accept-marker">★</span>}
+                    <span className="dfa-state-name">{row.state}</span>
+                  </td>
+                  {row.transitions.map((t, i) => (
+                    <td key={i} className="dfa-transition-cell">{t}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className="dfa-graph-mini">
+      <div className="dfa-graph-area">
         <AutomatonGraph automaton={dfa} />
       </div>
     </div>
