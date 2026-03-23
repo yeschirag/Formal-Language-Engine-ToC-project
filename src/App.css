@@ -562,6 +562,110 @@
   opacity: 0.4;
 }
 
+/* ===== DFA Panels ===== */
+.dfa-panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dfa-table-wrapper {
+  overflow: auto;
+  max-height: 180px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+
+.dfa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.dfa-table th {
+  text-align: left;
+  padding: 5px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  position: sticky;
+  top: 0;
+  background: hsl(var(--card));
+  z-index: 1;
+}
+
+.dfa-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+.dfa-accept-row {
+  background: rgba(107, 203, 139, 0.06);
+}
+
+.dfa-state-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.dfa-state-name {
+  color: #6366f1;
+  word-break: break-all;
+}
+
+.dfa-marker {
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.dfa-start-marker {
+  color: #5B9BD5;
+}
+
+.dfa-accept-marker {
+  color: #6BCB8B;
+}
+
+.dfa-transition-cell {
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  word-break: break-all;
+}
+
+.dfa-graph-mini {
+  flex: 1;
+  min-height: 200px;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.dfa-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary));
+}
+
+.dfa-stat strong {
+  color: #a5b4fc;
+  font-weight: 700;
+}
+
+.dfa-stat-sep {
+  color: hsl(var(--border));
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .landing-title {

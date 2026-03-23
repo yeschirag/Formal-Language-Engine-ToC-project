@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import './App.css';
 import RegexInput from './components/RegexInput';
 import AutomatonGraph from './components/AutomatonGraph';
-import ComingSoonPanel from './components/ComingSoonPanel';
+import DFAConversionPanel from './components/DFAConversionPanel';
+import DFAMinimizationPanel from './components/DFAMinimizationPanel';
 import FAToRegexPlayground from './components/FAToRegexPlayground';
 import { Button } from './components/ui/Button';
 import { GlowCard } from './components/ui/GlowCard';
@@ -11,6 +12,8 @@ import { ThemeToggle } from './components/ui/ThemeToggle';
 import { validateRegex } from './algorithms/regexValidator';
 import { regexToPostfix } from './algorithms/regexToPostfix';
 import { thompsonConstruction } from './algorithms/thompsonConstruction';
+import { nfaToDfa } from './algorithms/nfaToDfa';
+import { minimizeDfa } from './algorithms/dfaMinimization';
 
 function LandingPage({ onLaunch, onFaToRegex }) {
   return (
@@ -49,17 +52,17 @@ function LandingPage({ onLaunch, onFaToRegex }) {
           <p className="text-xs text-muted-foreground leading-relaxed">Build a finite automaton interactively and generate its equivalent regular expression via state elimination.</p>
           <span className="landing-card-badge">Open →</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-3">
+        <GlowCard className="animate-fade-in-delay-3 landing-card-clickable" onClick={onLaunch}>
           <div className="feature-icon">⚙️</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">DFA Conversion</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Transform ε-NFA into deterministic finite automata with subset construction.</p>
-          <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full border border-border mt-2 inline-block">Coming Soon</span>
+          <span className="landing-card-badge">Open →</span>
         </GlowCard>
-        <GlowCard className="animate-fade-in-delay-4">
+        <GlowCard className="animate-fade-in-delay-4 landing-card-clickable" onClick={onLaunch}>
           <div className="feature-icon">✂️</div>
           <h3 className="text-sm font-semibold text-foreground mb-1">DFA Minimization</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">Minimize DFA states using partition refinement for optimal automata.</p>
-          <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full border border-border mt-2 inline-block">Coming Soon</span>
+          <span className="landing-card-badge">Open →</span>
         </GlowCard>
       </div>
     </div>
@@ -89,6 +92,10 @@ function Simulator() {
     setCurrentRegex(regex);
   };
 
+  // Derive DFA and Minimized DFA from the NFA
+  const dfa = useMemo(() => (automaton ? nfaToDfa(automaton) : null), [automaton]);
+  const minDfa = useMemo(() => (dfa ? minimizeDfa(dfa) : null), [dfa]);
+
   if (view === 'landing') {
     return (
       <LandingPage
@@ -113,7 +120,7 @@ function Simulator() {
           <ThemeToggle />
         </div>
         <h1 className="app-title">Formal Language Engine</h1>
-        <p className="app-subtitle">Phase 1: Regular Expression → ε-NFA</p>
+        <p className="app-subtitle">Regular Expression → ε-NFA → DFA → Minimized DFA</p>
         <div className="input-section">
           <RegexInput onGenerate={handleGenerate} />
           {error && <p className="error-message">{error}</p>}
@@ -136,10 +143,20 @@ function Simulator() {
 
         <aside className="side-panels">
           <div className="side-panel">
-            <ComingSoonPanel title="DFA Conversion" />
+            <div className="panel" style={{ height: '100%' }}>
+              <h2 className="panel-title">DFA (Subset Construction)</h2>
+              <div className="panel-content">
+                <DFAConversionPanel automaton={dfa} />
+              </div>
+            </div>
           </div>
           <div className="side-panel">
-            <ComingSoonPanel title="DFA Minimization" />
+            <div className="panel" style={{ height: '100%' }}>
+              <h2 className="panel-title">Minimized DFA</h2>
+              <div className="panel-content">
+                <DFAMinimizationPanel dfa={minDfa} />
+              </div>
+            </div>
           </div>
         </aside>
       </main>
