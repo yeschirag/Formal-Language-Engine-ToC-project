@@ -48,7 +48,7 @@ export default function TransitionEdge({
             edgePath = res[0];
             labelX = res[1];
             labelY = res[2];
-        } catch (e) {
+        } catch {
             edgePath = `M ${sourceX} ${sourceY} L ${targetX} ${targetY}`;
             labelX = (sourceX + targetX) / 2;
             labelY = (sourceY + targetY) / 2;
