@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +9,7 @@
 }
 
 :root {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
@@ -15,52 +17,28 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: 228 15% 9%; /* Sleeker, deeper charcoal */
+  --background: 224 34% 8%;
   --foreground: 210 40% 98%;
-  --card: 228 15% 12%; /* Slightly elevated dark background */
+  --card: 224 30% 12%;
   --card-foreground: 210 40% 98%;
-  --popover: 228 15% 12%;
+  --popover: 224 30% 12%;
   --popover-foreground: 210 40% 98%;
-  --primary: 235 86% 65%; /* Vibrant indigo */
+  --primary: 231 96% 67%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 228 15% 15%; /* Distinct but subtle secondary */
+  --secondary: 224 27% 16%;
   --secondary-foreground: 210 40% 98%;
-  --muted: 228 15% 16%;
-  --muted-foreground: 215 14% 60%;
-  --accent: 235 86% 65%;
+  --muted: 224 27% 16%;
+  --muted-foreground: 218 14% 68%;
+  --accent: 196 95% 60%;
   --accent-foreground: 0 0% 100%;
   --destructive: 350 89% 60%;
   --destructive-foreground: 0 0% 100%;
-  --border: 228 15% 20%;
-  --input: 228 15% 20%;
-  --ring: 235 86% 65%;
-  --radius: 0.75rem; /* Rounder cards */
+  --border: 224 26% 19%;
+  --input: 224 26% 19%;
+  --ring: 231 96% 67%;
+  --radius: 0.9rem;
 }
 
-/* Custom Scrollbar for sleek aesthetic */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -85,16 +63,37 @@
   }
 }
 
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, hsl(var(--primary) / 0.12), transparent 30%),
+    radial-gradient(circle at top right, hsl(var(--accent) / 0.14), transparent 25%),
+    linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background)) 100%);
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
   position: relative;
   z-index: 1;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
 }

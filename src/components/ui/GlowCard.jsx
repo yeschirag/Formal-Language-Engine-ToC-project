@@ -7,7 +7,7 @@ export function GlowCard({ className, children, ...props }) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-card p-6 transition-all duration-200 hover:border-indigo-500/40 hover:shadow-sm",
+        "rounded-2xl border border-border bg-card p-6 transition-all duration-200 hover:border-primary/25 hover:shadow-[0_18px_36px_rgba(15,23,42,0.08)]",
         className
       )}
       {...props}

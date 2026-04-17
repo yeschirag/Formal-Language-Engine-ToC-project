@@ -12,8 +12,6 @@ export default function TransitionEdge({
     markerEnd,
     style = {},
 }) {
-    // Use data flag for reliable self-loop detection (coordinates may differ
-    // because source/target handles are offset on the same node)
     const isSelfLoop = data?.isSelfLoop ?? (sourceX === targetX && sourceY === targetY);
 
     let edgePath = '';
@@ -21,20 +19,21 @@ export default function TransitionEdge({
     let labelY = sourceY;
 
     if (isSelfLoop) {
-        // Draw a clearly visible loop above the node
-        const loopHeight = 55;
-        const loopWidth = 28;
+        // Build a taller, balanced loop so the edge reads clearly above the node.
+        const gap = Math.max(10, Math.abs(targetX - sourceX));
+        const lift = 74;
+        const controlSpread = 58 + gap * 1.1;
         const midX = (sourceX + targetX) / 2;
-        const midY = Math.min(sourceY, targetY);
+        const topY = Math.min(sourceY, targetY) - lift;
 
-        const cp1X = midX - loopWidth;
-        const cp1Y = midY - loopHeight;
-        const cp2X = midX + loopWidth;
-        const cp2Y = midY - loopHeight;
+        const cp1X = sourceX + controlSpread;
+        const cp1Y = sourceY - 20;
+        const cp2X = targetX - controlSpread;
+        const cp2Y = targetY - 20;
 
         edgePath = `M ${sourceX} ${sourceY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${targetX} ${targetY}`;
-        labelX = midX;
-        labelY = midY - loopHeight + 10;
+        labelX = midX + 10;
+        labelY = topY + 10;
     } else {
         try {
             const res = getBezierPath({
@@ -62,10 +61,12 @@ export default function TransitionEdge({
             <path
                 id={id}
                 style={{
-                    stroke: 'hsl(var(--muted-foreground))',
-                    strokeWidth: 1.5,
+                    stroke: 'hsl(var(--foreground) / 0.58)',
+                    strokeWidth: 2,
                     fill: 'none',
-                    transition: 'stroke 0.2s',
+                    strokeLinecap: 'round',
+                    strokeLinejoin: 'round',
+                    transition: 'stroke 0.2s, stroke-width 0.2s',
                     ...style,
                 }}
                 className="react-flow__edge-path"
@@ -74,10 +75,10 @@ export default function TransitionEdge({
             />
             {label && (
                 <foreignObject
-                    width={80}
-                    height={30}
-                    x={labelX - 40}
-                    y={labelY - 15}
+                    width={108}
+                    height={34}
+                    x={labelX - 54}
+                    y={labelY - 17}
                     requiredExtensions="http://www.w3.org/1999/xhtml"
                     style={{ overflow: 'visible', pointerEvents: 'none' }}
                 >
@@ -93,18 +94,17 @@ export default function TransitionEdge({
                     >
                         <span
                             style={{
-                                background: 'hsl(var(--card) / 0.8)',
-                                backdropFilter: 'blur(4px)',
+                                background: 'linear-gradient(180deg, hsl(var(--card) / 0.98), hsl(var(--secondary) / 0.95))',
                                 color: 'hsl(var(--foreground))',
-                                border: '1px solid hsl(var(--border))',
+                                border: '1px solid hsl(var(--border) / 0.95)',
                                 fontSize: 11,
-                                fontWeight: 600,
-                                fontFamily: "'SF Mono', 'Fira Code', monospace",
-                                padding: '4px 12px',
-                                borderRadius: 14,
+                                fontWeight: 700,
+                                fontFamily: "'Inter', 'SF Mono', monospace",
+                                padding: '5px 12px',
+                                borderRadius: 999,
                                 whiteSpace: 'nowrap',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                letterSpacing: 0.5,
+                                boxShadow: '0 8px 18px rgba(15, 23, 42, 0.12)',
+                                letterSpacing: 0.3,
                             }}
                         >
                             {label}
