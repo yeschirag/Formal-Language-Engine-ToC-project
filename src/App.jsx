@@ -242,7 +242,7 @@ function RegexToNFA() {
       />
 
       <main className="main-layout">
-        <BorderGlow className="panel nfa-panel panel-glow" {...PANEL_GLOW_PROPS}>
+        <BorderGlow className="panel graph-panel nfa-panel panel-glow" {...PANEL_GLOW_PROPS}>
           <h2 className="panel-title">
             ε-NFA (Thompson Construction)
             <span className="panel-title-legend">
@@ -289,7 +289,7 @@ function DFAConversionPage() {
       />
 
       <main className="main-layout">
-        <BorderGlow className="panel nfa-panel panel-glow" {...PANEL_GLOW_PROPS}>
+        <BorderGlow className="panel graph-panel nfa-panel panel-glow" {...PANEL_GLOW_PROPS}>
           <h2 className="panel-title">
             Step 1 · ε-NFA (Thompson Construction)
             <span className="panel-title-legend">
@@ -316,7 +316,7 @@ function DFAConversionPage() {
           </div>
         </BorderGlow>
 
-        <BorderGlow className="panel panel-glow" {...PANEL_GLOW_PROPS}>
+        <BorderGlow className="panel graph-panel panel-glow" {...PANEL_GLOW_PROPS}>
           <h2 className="panel-title">DFA (Subset Construction)</h2>
           <div className="panel-content">
             <DFAConversionPanel automaton={dfa} />
@@ -343,14 +343,14 @@ function DFAMinimizationPage() {
       />
 
       <main className="main-layout">
-        <BorderGlow className="panel panel-glow" {...PANEL_GLOW_PROPS}>
+        <BorderGlow className="panel graph-panel panel-glow" {...PANEL_GLOW_PROPS}>
           <h2 className="panel-title">Step 1 · DFA (Subset Construction)</h2>
           <div className="panel-content">
             <DFAConversionPanel automaton={dfa} />
           </div>
         </BorderGlow>
 
-        <BorderGlow className="panel panel-glow" {...PANEL_GLOW_PROPS}>
+        <BorderGlow className="panel graph-panel panel-glow" {...PANEL_GLOW_PROPS}>
           <h2 className="panel-title">Step 2 · Minimized DFA</h2>
           <div className="panel-content">
             <DFAMinimizationPanel dfa={minDfa} />

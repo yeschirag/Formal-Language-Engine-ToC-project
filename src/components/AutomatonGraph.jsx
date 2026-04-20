@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   ReactFlow,
   Background,
@@ -18,10 +18,27 @@ export default function AutomatonGraph({ automaton }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const prevNodesRef = useRef([]);
+  const shellRef = useRef(null);
+  const reactFlowRef = useRef(null);
   const flow = useMemo(
     () => buildAutomatonFlow(automaton, prevNodesRef.current, { layout: 'grid' }),
     [automaton]
   );
+
+  const scheduleFitView = useCallback(() => {
+    if (!automaton || !reactFlowRef.current) return;
+
+    // Delay fit until layout has settled to avoid top-anchored graphs.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        reactFlowRef.current?.fitView({
+          padding: 0.2,
+          maxZoom: 1.2,
+          duration: 220,
+        });
+      });
+    });
+  }, [automaton]);
 
   useEffect(() => {
     if (!automaton) {
@@ -33,7 +50,19 @@ export default function AutomatonGraph({ automaton }) {
     prevNodesRef.current = flow.nodes;
     setNodes(flow.nodes);
     setEdges(flow.edges);
-  }, [automaton, flow, setNodes, setEdges]);
+    scheduleFitView();
+  }, [automaton, flow, setNodes, setEdges, scheduleFitView]);
+
+  useEffect(() => {
+    if (!automaton || !shellRef.current) return;
+
+    const observer = new ResizeObserver(() => {
+      scheduleFitView();
+    });
+
+    observer.observe(shellRef.current);
+    return () => observer.disconnect();
+  }, [automaton, scheduleFitView]);
 
   if (!automaton) {
     return (
@@ -48,11 +77,15 @@ export default function AutomatonGraph({ automaton }) {
   }
 
   return (
-    <div className="automaton-flow-shell">
+    <div className="automaton-flow-shell" ref={shellRef}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
+        onInit={(instance) => {
+          reactFlowRef.current = instance;
+          scheduleFitView();
+        }}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView

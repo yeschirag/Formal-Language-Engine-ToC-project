@@ -259,7 +259,7 @@ export default function FAToRegexPlayground() {
           )}
         </BorderGlow>
 
-        <BorderGlow className="panel fa-graph-panel panel-glow" {...GLOW_CARD_PROPS}>
+        <BorderGlow className="panel graph-panel fa-graph-panel panel-glow" {...GLOW_CARD_PROPS}>
           <h2 className="panel-title">
             FA Graph
             <span className="panel-title-legend">

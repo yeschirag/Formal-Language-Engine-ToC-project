@@ -1,16 +1,70 @@
-# React + Vite
+# Formal Language Engine
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive Theory of Computation playground for exploring regex and finite automata transformations.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The project is deployed at: **https://toc.yeschirag.dev**
 
-## React Compiler
+## Modules
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Regex to epsilon-NFA (Thompson Construction)
+- epsilon-NFA to DFA (Subset Construction)
+- DFA Minimization
+- FA to Regex playground (state elimination workflow)
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React + Vite
+- React Router
+- XState
+- React Flow (`@xyflow/react`)
+- Tailwind-based component styling + custom CSS
+- Vitest + Testing Library
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm
+
+### Install
+
+```bash
+npm install
+```
+
+### Run Development Server
+
+```bash
+npm run dev
+```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Run Tests
+
+```bash
+npm run test
+```
+
+## Project Structure
+
+```text
+src/
+	algorithms/        Core ToC transformation algorithms
+	components/        UI panels, graph views, shared controls
+	models/            Automaton data models
+	__tests__/         Unit tests for algorithms and validators
+```
